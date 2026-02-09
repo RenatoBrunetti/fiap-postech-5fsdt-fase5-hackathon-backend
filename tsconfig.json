@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // Target the latest stable ECMAScript version for Node.js 22
+    "module": "NodeNext", // Use Node's native module resolution strategy
+    "moduleResolution": "NodeNext", // Mimic Node's module resolution behavior
+    "lib": ["ES2022", "DOM"], // Include standard libraries, "DOM" for common utility types
+    "outDir": "./dist", // Output directory for compiled JavaScript files
+    "rootDir": "./src", // Root directory of your TypeScript source files
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Allow default imports from CommonJS modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent file casing
+    "declaration": true, // Generate declaration files (.d.ts) for your modules
+    "emitDecoratorMetadata": true, // Enable metadata emission for decorators
+    "experimentalDecorators": true, // Enable experimental support for decorators
+    "removeComments": true // Remove comments from the output files
+  },
+  "include": ["src/**/*.ts"], // Files to include in compilation
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"], // Files to exclude from compilation
+  "ts-node": { "esm": true } // Enable ESM support for ts-node
+}

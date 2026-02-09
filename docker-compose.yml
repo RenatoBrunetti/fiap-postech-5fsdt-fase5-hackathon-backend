@@ -1,0 +1,49 @@
+services:
+  api:
+    build: .
+    container_name: api
+    ports:
+      - '${PORT}:${PORT}'
+    env_file: ./.env
+    environment:
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_HOST=database
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_PORT=${DATABASE_PORT}
+    stdin_open: true
+    depends_on:
+      - database
+    networks:
+      - hackathon-feedback
+
+  database:
+    image: postgres:17
+    container_name: database
+    restart: always
+    shm_size: 128mb
+    env_file: ./.env
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - ${DATABASE_PORT}:5432
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data
+      # Initial script to create tables and seed data
+      - ./scripts/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./scripts/db/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    networks:
+      - hackathon-feedback
+
+volumes:
+  data:
+
+networks:
+  hackathon-feedback:
+    external: true
+    driver: bridge
+    name: hackathon-feedback
