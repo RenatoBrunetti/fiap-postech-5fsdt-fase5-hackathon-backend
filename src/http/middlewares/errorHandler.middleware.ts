@@ -7,6 +7,7 @@ export function errorHandler(
   error: Error,
   req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
 ) {
   // 1. Validation Errors (Zod)
