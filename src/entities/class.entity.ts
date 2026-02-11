@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 // Models
@@ -14,6 +15,7 @@ import { IClass } from './models/class.interface.js';
 // Entities
 import { School } from './school.entity.js';
 import { Grade } from './grade.entity.js';
+import { ClassUser } from './classUser.entity.js';
 
 @Entity('Class')
 export class Class implements IClass {
@@ -34,13 +36,16 @@ export class Class implements IClass {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 
-  @ManyToOne(() => School)
+  @ManyToOne('School', (school: School) => school.classes)
   @JoinColumn({ name: 'schoolId' })
   school?: School;
 
-  @ManyToOne(() => Grade)
+  @ManyToOne('Grade', (grade: Grade) => grade.classes)
   @JoinColumn({ name: 'gradeId' })
   grade?: Grade;
+
+  @OneToMany('ClassUser', (classUser: ClassUser) => classUser.class)
+  classUsers?: ClassUser[];
 
   constructor(partial?: Partial<Class>) {
     if (partial) Object.assign(this, partial);

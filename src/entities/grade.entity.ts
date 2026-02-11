@@ -4,16 +4,20 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 // Models
 import { IGrade } from './models/grade.interface.js';
 
+// Entities
+import { Class } from './class.entity.js';
+
 @Entity('Grade')
 export class Grade implements IGrade {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
-  @Column({ unique: true, type: 'text' })
+  @Column({ type: 'text' })
   name!: string;
   @Column({ type: 'text' })
   category!: string;
@@ -23,6 +27,9 @@ export class Grade implements IGrade {
   createdAt!: Date;
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
+
+  @OneToMany('Class', (classe: Class) => classe.grade)
+  classes?: Class[];
 
   constructor(partial?: Partial<Grade>) {
     if (partial) Object.assign(this, partial);

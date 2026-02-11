@@ -6,23 +6,21 @@ import { jwtAuth } from '../../middlewares/jwtAuth.middleware.js';
 import { validate } from '../../middlewares/validate.js';
 
 // Schemas
-import { createUserBodySchema } from './schemas/createUser.schema.js';
+import { assignClassSchema } from './schemas/assignClass.schema.js';
 
 // Controllers
-import { UserController } from './user.controller.js';
+import { ClassUserController } from './classUser.controller.js';
 
-const userController = new UserController();
+const classUserController = new ClassUserController();
 const router = Router();
 
-// Create User
+// Assign User to Class
 router.post(
-  '/',
+  '/assign',
   jwtAuth,
   authorize(['Admin']),
-  validate(createUserBodySchema),
-  userController.createUser,
+  validate(assignClassSchema),
+  classUserController.assign,
 );
-// Find All Users
-router.get('/', jwtAuth, authorize(['Admin']), userController.findAllUsers);
 
 export default router;

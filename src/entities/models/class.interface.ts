@@ -1,3 +1,6 @@
+import { IGrade } from './grade.interface.js';
+import { ISchool } from './school.interface.js';
+
 export interface IClass {
   id: string;
   name: string;
@@ -7,4 +10,6 @@ export interface IClass {
   gradeId: string;
   createdAt: Date;
   updatedAt: Date;
+  school?: ISchool;
+  grade?: IGrade;
 }

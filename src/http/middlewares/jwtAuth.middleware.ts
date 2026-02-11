@@ -28,7 +28,6 @@ export function jwtAuth(req: Request, res: Response, next: NextFunction) {
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
-    console.log('$$$$ decoded token:', decoded);
 
     req.user = {
       id: decoded.sub,

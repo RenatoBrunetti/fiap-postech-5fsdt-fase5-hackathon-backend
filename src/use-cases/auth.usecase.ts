@@ -42,7 +42,6 @@ export class AuthUseCase {
   }
 
   async generateTokens(user: IUser): Promise<IAuthTokens> {
-    console.log('$$$$', user);
     if (!user.id) throw new Error('User ID is required for token generation');
     if (!user.role)
       throw new Error('User role is required for token generation');

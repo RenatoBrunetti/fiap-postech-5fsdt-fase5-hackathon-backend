@@ -6,31 +6,25 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
-  Unique,
 } from 'typeorm';
 
-// Models
-import { ISchoolUser } from './models/schoolUser.interface.js';
-
-// Entities
-import { School } from './school.entity.js';
+import { Class } from './class.entity.js';
 import { User } from './user.entity.js';
 
-@Entity('SchoolUser')
-@Unique('unq_school_user', ['schoolId', 'userId'])
-export class SchoolUser implements ISchoolUser {
+import { IClassUser } from './models/classUser.interface.js';
+
+@Entity('ClassUser')
+export class ClassUser implements IClassUser {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
   @Column({ type: 'date' })
   startDate!: Date;
   @Column({ type: 'date', nullable: true })
-  endDate?: Date;
-  @Column({ type: 'enum', enum: ['TEACHER', 'STUDENT'] })
-  status!: 'TEACHER' | 'STUDENT';
+  endDate?: Date | null;
   @Column({ default: true, type: 'boolean' })
   active!: boolean;
   @Column({ type: 'uuid' })
-  schoolId!: string;
+  classId!: string;
   @Column({ type: 'uuid' })
   userId!: string;
   @CreateDateColumn({ type: 'timestamptz' })
@@ -38,15 +32,15 @@ export class SchoolUser implements ISchoolUser {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 
-  @ManyToOne(() => School, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'schoolId' })
-  school?: School;
-
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @ManyToOne('User', (user: User) => user.classUsers)
   @JoinColumn({ name: 'userId' })
   user?: User;
 
-  constructor(partial?: Partial<SchoolUser>) {
+  @ManyToOne('Class', (classEntity: Class) => classEntity.classUsers)
+  @JoinColumn({ name: 'classId' })
+  class?: Class;
+
+  constructor(partial?: Partial<ClassUser>) {
     if (partial) Object.assign(this, partial);
   }
 }

@@ -15,6 +15,7 @@ import { IUser } from './models/user.interface.js';
 // Entities
 import type { Role } from './role.entity.js';
 import type { RefreshToken } from './refreshToken.entity.js';
+import { ClassUser } from './classUser.entity.js';
 
 @Entity('User')
 export class User implements IUser {
@@ -43,6 +44,9 @@ export class User implements IUser {
 
   @OneToMany('RefreshToken', (refreshToken: RefreshToken) => refreshToken.user)
   refreshTokens?: RefreshToken[];
+
+  @OneToMany('ClassUser', (classUser: ClassUser) => classUser.user)
+  classUsers?: ClassUser[];
 
   constructor(partial?: Partial<User>) {
     if (partial) Object.assign(this, partial);

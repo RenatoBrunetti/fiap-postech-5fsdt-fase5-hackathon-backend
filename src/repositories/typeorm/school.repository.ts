@@ -18,6 +18,12 @@ export class SchoolRepository implements ISchoolRepository {
     });
   }
 
+  async findById(id: string): Promise<ISchool | null> {
+    return this.repository.findOne({
+      where: { id },
+    });
+  }
+
   async findByDocument(document: string): Promise<ISchool | null> {
     return this.repository.findOne({
       where: { document },

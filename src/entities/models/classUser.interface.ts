@@ -2,14 +2,14 @@ import { IClass } from './class.interface.js';
 import { IUser } from './user.interface.js';
 
 export interface IClassUser {
+  id?: string;
+  startDate: Date;
+  endDate?: Date | null;
+  active: boolean;
   classId: string;
   userId: string;
-  startDate: Date;
-  endDate?: Date;
-  status: string;
-  active: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   class?: IClass;
   user?: IUser;
 }

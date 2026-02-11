@@ -4,5 +4,4 @@ export interface IRefreshToken {
   expiresAt: Date;
   userId: string;
   createdAt: Date;
-  updatedAt: Date;
 }

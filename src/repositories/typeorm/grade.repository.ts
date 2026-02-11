@@ -24,8 +24,8 @@ export class GradeRepository implements IGradeRepository {
     });
   }
 
-  async findByName(name: string): Promise<IGrade | null> {
-    return this.repository.findOne({
+  async findByName(name: string): Promise<IGrade[]> {
+    return this.repository.find({
       where: { name },
     });
   }

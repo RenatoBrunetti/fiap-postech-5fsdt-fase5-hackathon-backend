@@ -4,10 +4,14 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 // Models
 import { ISchool } from './models/school.interface.js';
+
+// Entities
+import { Class } from './class.entity.js';
 
 @Entity('School')
 export class School implements ISchool {
@@ -23,6 +27,9 @@ export class School implements ISchool {
   createdAt!: Date;
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
+
+  @OneToMany('Class', (classe: Class) => classe.school)
+  classes?: Class[];
 
   constructor(partial?: Partial<School>) {
     if (partial) Object.assign(this, partial);

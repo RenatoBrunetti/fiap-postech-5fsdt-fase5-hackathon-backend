@@ -1,6 +1,6 @@
 -- Database Initialization Script
 
--- User Management Tables
+-- User & Role Management
 create table if not exists "Role" (
   "id" uuid primary key default gen_random_uuid(),
   "name" varchar(50) unique not null,
@@ -19,109 +19,71 @@ create table if not exists "User" (
   "active" boolean not null default true,
   "createdAt" timestamptz default current_timestamp,
   "updatedAt" timestamptz default current_timestamp,
-
   "roleId" uuid not null references "Role"("id") on delete restrict
 );
-create index "idx_user_roleid" on "User" ("roleId");
+create index if not exists "idx_user_roleid" on "User" ("roleId");
 
--- Academic Management Tables
+-- Academic Structure
 create table if not exists "Grade" (
   "id" uuid primary key default gen_random_uuid(),
-  "name" varchar(20) unique not null,
-  "category" varchar(20),
+  "name" varchar(50) not null,
+  "category" varchar(50),
   "active" boolean not null default true,
-	"createdAt" timestamptz default current_timestamp,
-	"updatedAt" timestamptz default current_timestamp
+  "createdAt" timestamptz default current_timestamp,
+  "updatedAt" timestamptz default current_timestamp
 );
 
--- School Management Tables
+-- School Management
 create table if not exists "School" (
   "id" uuid primary key default gen_random_uuid(),
   "name" varchar(200) unique not null,
   "document" varchar(14) unique not null,
   "active" boolean not null default true,
-	"createdAt" timestamptz default current_timestamp,
-	"updatedAt" timestamptz default current_timestamp
-);
-
-create table if not exists "SchoolUser" (
-  "id" uuid primary key default gen_random_uuid(),
-  "startDate" date not null,
-  "endDate" date,
-  "status" varchar(20) not null check ("status" in ('TEACHER', 'STUDENT')),
-  "active" boolean not null default true,
   "createdAt" timestamptz default current_timestamp,
-  "updatedAt" timestamptz default current_timestamp,
-
-  "schoolId" uuid not null references "School"("id") on delete cascade,
-  "userId" uuid not null references "User"("id") on delete cascade,
-  constraint "unq_school_user" unique ("schoolId", "userId")
+  "updatedAt" timestamptz default current_timestamp
 );
 
--- Class Management Tables
+-- Class Management
 create table if not exists "Class" (
   "id" uuid primary key default gen_random_uuid(),
-  "name" varchar(20) not null,
+  "name" varchar(50) not null,
   "year" integer not null,
   "active" boolean not null default true,
   "createdAt" timestamptz default current_timestamp,
   "updatedAt" timestamptz default current_timestamp,
-
   "schoolId" uuid not null references "School"("id") on delete restrict,
   "gradeId" uuid not null references "Grade"("id") on delete restrict
 );
+create index if not exists "idx_class_schoolid" on "Class" ("schoolId");
+create index if not exists "idx_class_gradeid" on "Class" ("gradeId");
 
+-- Junction Management
 create table if not exists "ClassUser" (
   "id" uuid primary key default gen_random_uuid(),
   "startDate" date not null,
   "endDate" date,
-  "status" varchar(20) not null check ("status" in ('TEACHER', 'STUDENT')),
   "active" boolean not null default true,
   "createdAt" timestamptz default current_timestamp,
   "updatedAt" timestamptz default current_timestamp,
-
-  "classId" uuid not null references "Class"("id") on delete restrict,
-  "userId" uuid not null references "User"("id") on delete restrict,
+  "classId" uuid not null references "Class"("id") on delete cascade,
+  "userId" uuid not null references "User"("id") on delete cascade,
   constraint "unq_class_user" unique ("classId", "userId")
 );
+create index if not exists "idx_classuser_class" on "ClassUser" ("classId");
+create index if not exists "idx_classuser_user" on "ClassUser" ("userId");
 
-create table if not exists "ClassGrade" (
-  "id" uuid primary key default gen_random_uuid(),
-  "startDate" date not null,
-  "endDate" date,
-  "status" varchar(20) not null check ("status" in ('TEACHER', 'STUDENT')),
-  "active" boolean not null default true,
-  "createdAt" timestamptz default current_timestamp,
-  "updatedAt" timestamptz default current_timestamp,
-
-  "classId" uuid not null references "Class"("id") on delete restrict,
-  "gradeId" uuid not null references "Grade"("id") on delete restrict,
-  constraint "unq_class_grade" unique ("classId", "gradeId")
-);
-
--- Feedback Management Tables
+-- Feedback System
 create table if not exists "Feedback" (
   "id" uuid primary key default gen_random_uuid(),
   "title" varchar(200) not null,
   "active" boolean not null default true,
   "createdAt" timestamptz default current_timestamp,
   "updatedAt" timestamptz default current_timestamp,
-
-  "classId" uuid not null references "Class"("id") on delete restrict,
+  "classId" uuid not null references "Class"("id") on delete cascade,
   "userId" uuid not null references "User"("id") on delete restrict
 );
-
-create table if not exists "FeedbackUser" (
-  "id" uuid primary key default gen_random_uuid(),
-  "status" varchar(20) not null,
-  "active" boolean not null default true,
-  "createdAt" timestamptz default current_timestamp,
-  "updatedAt" timestamptz default current_timestamp,
-
-  "feedbackId" uuid not null references "Feedback"("id") on delete restrict,
-  "userId" uuid not null references "User"("id") on delete restrict,
-  constraint "unq_feedback_user" unique ("feedbackId", "userId")
-);
+create index if not exists "idx_feedback_classid" on "Feedback" ("classId");
+create index if not exists "idx_feedback_userid" on "Feedback" ("userId");
 
 create table if not exists "Question" (
   "id" uuid primary key default gen_random_uuid(),
@@ -131,9 +93,9 @@ create table if not exists "Question" (
   "active" boolean not null default true,
   "createdAt" timestamptz default current_timestamp,
   "updatedAt" timestamptz default current_timestamp,
-
-  "feedbackId" uuid not null references "Feedback"("id") on delete restrict
+  "feedbackId" uuid not null references "Feedback"("id") on delete cascade
 );
+create index if not exists "idx_question_feedbackid" on "Question" ("feedbackId");
 
 create table if not exists "Answer" (
   "id" uuid primary key default gen_random_uuid(),
@@ -141,20 +103,18 @@ create table if not exists "Answer" (
   "active" boolean not null default true,
   "createdAt" timestamptz default current_timestamp,
   "updatedAt" timestamptz default current_timestamp,
-
   "questionId" uuid not null references "Question"("id") on delete cascade,
   "userId" uuid not null references "User"("id") on delete restrict
 );
-create index "idx_answer_userid" on "Answer"("userId");
+create index if not exists "idx_answer_questionid" on "Answer" ("questionId");
+create index if not exists "idx_answer_userid" on "Answer" ("userId");
 
--- Authentication Management Tables
+-- Authentication
 create table if not exists "RefreshToken" (
   "id" uuid primary key default gen_random_uuid(),
   "token" text unique not null,
   "expiresAt" timestamptz not null,
   "createdAt" timestamptz default current_timestamp,
-  "updatedAt" timestamptz default current_timestamp,
-
   "userId" uuid not null references "User"("id") on delete cascade
 );
-create index "idx_refresh_tokens_token" on "RefreshToken" ("token");
+create index if not exists "idx_refreshtoken_userid" on "RefreshToken" ("userId");

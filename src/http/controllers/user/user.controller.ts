@@ -6,8 +6,6 @@ import { hashPassword } from '../../../lib/bcrypt/hash-password.js';
 import { CreateUserBody } from './schemas/createUser.schema.js';
 
 export class UserController {
-  constructor() {}
-
   async findAllUsers(req: Request, res: Response): Promise<Response> {
     const userUseCase = makeUserUseCase();
     const users = await userUseCase.findAllUsers();

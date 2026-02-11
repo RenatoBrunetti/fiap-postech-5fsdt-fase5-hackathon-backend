@@ -12,7 +12,7 @@ export class GradeUseCase {
     return await this.gradeRepository.findById(id);
   }
 
-  async findByName(name: string): Promise<IGrade | null> {
+  async findByName(name: string): Promise<IGrade[]> {
     return await this.gradeRepository.findByName(name);
   }
 

@@ -5,13 +5,13 @@ import env from '../../env.js';
 // Entities
 import { Answer } from '../../entities/answer.entity.js';
 import { Class } from '../../entities/class.entity.js';
+import { ClassUser } from '../../entities/classUser.entity.js';
 import { Feedback } from '../../entities/feedback.entity.js';
 import { Grade } from '../../entities/grade.entity.js';
 import { Question } from '../../entities/question.entity.js';
 import { RefreshToken } from '../../entities/refreshToken.entity.js';
 import { Role } from '../../entities/role.entity.js';
 import { School } from '../../entities/school.entity.js';
-import { SchoolUser } from '../../entities/schoolUser.entity.js';
 import { User } from '../../entities/user.entity.js';
 
 export const appDataSource = new DataSource({
@@ -29,8 +29,8 @@ export const appDataSource = new DataSource({
     User,
     Grade,
     School,
-    SchoolUser,
     Class,
+    ClassUser,
     Feedback,
     Question,
     Answer,

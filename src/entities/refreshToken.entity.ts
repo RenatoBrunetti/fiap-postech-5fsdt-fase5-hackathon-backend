@@ -3,7 +3,6 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
@@ -26,8 +25,6 @@ export class RefreshToken implements IRefreshToken {
   userId!: string;
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
-  @UpdateDateColumn({ type: 'timestamptz' })
-  updatedAt!: Date;
 
   @ManyToOne('User', (user: User) => user.refreshTokens, {
     onDelete: 'CASCADE',
