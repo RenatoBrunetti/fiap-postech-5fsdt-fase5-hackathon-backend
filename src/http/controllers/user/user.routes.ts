@@ -20,9 +20,9 @@ router.post(
   jwtAuth,
   authorize(['Admin']),
   validate(createUserBodySchema),
-  userController.createUser,
+  userController.create,
 );
 // Find All Users
-router.get('/', jwtAuth, authorize(['Admin']), userController.findAllUsers);
+router.get('/', jwtAuth, authorize(['Admin']), userController.findAll);
 
 export default router;

@@ -4,7 +4,7 @@ import { IRoleRepository } from '../repositories/role.repository.interface.js';
 export class RoleUseCase {
   constructor(private roleRepository: IRoleRepository) {}
 
-  async findAllRoles(): Promise<IRole[]> {
+  async findAll(): Promise<IRole[]> {
     return this.roleRepository.findAll();
   }
 }

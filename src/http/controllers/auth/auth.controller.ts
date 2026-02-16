@@ -12,11 +12,11 @@ export class AuthController {
 
     const authentication = await authUseCase.authenticate(email, password);
     if (!authentication) {
-      return res.status(401).send({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     setRefreshTokenCookie(res, authentication.refreshToken);
-    return res.status(200).send(authentication);
+    return res.status(200).json(authentication);
   }
 
   async refreshToken(req: Request, res: Response): Promise<Response> {
@@ -25,7 +25,7 @@ export class AuthController {
     const authUseCase = makeAuthUseCase();
     const result = await authUseCase.refreshToken(token);
     setRefreshTokenCookie(res, result.refreshToken);
-    return res.status(200).send(result);
+    return res.status(200).json(result);
   }
 
   async logout(req: Request, res: Response): Promise<Response> {
@@ -36,6 +36,6 @@ export class AuthController {
     }
 
     res.clearCookie('refreshToken');
-    return res.status(204).send();
+    return res.status(204).json();
   }
 }

@@ -11,13 +11,13 @@ export class SchoolController {
     const schoolUseCase = makeSchoolUseCase();
     const school = await schoolUseCase.create(data);
 
-    return res.status(201).send(school);
+    return res.status(201).json(school);
   }
 
   async findAll(req: Request, res: Response): Promise<Response> {
     const schoolUseCase = makeSchoolUseCase();
     const schools = await schoolUseCase.findAll();
 
-    return res.status(200).send(schools);
+    return res.status(200).json(schools);
   }
 }

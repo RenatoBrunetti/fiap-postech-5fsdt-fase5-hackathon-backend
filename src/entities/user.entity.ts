@@ -20,7 +20,7 @@ import { ClassUser } from './classUser.entity.js';
 @Entity('User')
 export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  id?: string;
   @Column({ unique: true, type: 'text' })
   email!: string;
   @Column({ select: false, type: 'text' })

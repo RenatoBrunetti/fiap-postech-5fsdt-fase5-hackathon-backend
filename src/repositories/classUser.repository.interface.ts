@@ -2,6 +2,7 @@ import { IClassUser } from '../entities/models/classUser.interface.js';
 
 export interface IClassUserRepository {
   create(data: Partial<IClassUser>): Promise<IClassUser>;
+  findAllByUserId(userId: string): Promise<IClassUser[]>;
   findByUserAndClass(
     userId: string,
     classId: string,

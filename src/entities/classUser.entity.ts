@@ -16,7 +16,7 @@ import { IClassUser } from './models/classUser.interface.js';
 @Entity('ClassUser')
 export class ClassUser implements IClassUser {
   @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  id?: string;
   @Column({ type: 'date' })
   startDate!: Date;
   @Column({ type: 'date', nullable: true })

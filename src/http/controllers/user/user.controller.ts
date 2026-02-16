@@ -1,29 +1,27 @@
 import { Request, Response } from 'express';
 
 import { makeUserUseCase } from '../../../use-cases/factories/make.user.js';
-import { hashPassword } from '../../../lib/bcrypt/hash-password.js';
 
 import { CreateUserBody } from './schemas/createUser.schema.js';
 
 export class UserController {
-  async findAllUsers(req: Request, res: Response): Promise<Response> {
+  async findAll(req: Request, res: Response): Promise<Response> {
     const userUseCase = makeUserUseCase();
-    const users = await userUseCase.findAllUsers();
-    return res.status(200).send(users);
+    const users = await userUseCase.findAll();
+    return res.status(200).json(users);
   }
 
-  async createUser(req: Request, res: Response): Promise<Response> {
+  async create(req: Request, res: Response): Promise<Response> {
     const { name, email, password, document, roleId }: CreateUserBody =
       req.body;
-    const hashedPassword = await hashPassword(password);
     const userUseCase = makeUserUseCase();
-    const user = await userUseCase.createUser({
+    const user = await userUseCase.create({
       name,
       email,
-      password: hashedPassword,
+      password,
       document,
       roleId,
     });
-    return res.status(201).send(user);
+    return res.status(201).json(user);
   }
 }

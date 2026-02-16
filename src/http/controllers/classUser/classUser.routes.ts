@@ -7,6 +7,7 @@ import { validate } from '../../middlewares/validate.js';
 
 // Schemas
 import { assignClassSchema } from './schemas/assignClass.schema.js';
+import { findByUserSchema } from './schemas/findByUser.schema.js';
 
 // Controllers
 import { ClassUserController } from './classUser.controller.js';
@@ -21,6 +22,14 @@ router.post(
   authorize(['Admin']),
   validate(assignClassSchema),
   classUserController.assign,
+);
+
+router.get(
+  '/user/:userId',
+  jwtAuth,
+  authorize(['Admin', 'Teacher']),
+  validate(findByUserSchema),
+  classUserController.findByUser,
 );
 
 export default router;

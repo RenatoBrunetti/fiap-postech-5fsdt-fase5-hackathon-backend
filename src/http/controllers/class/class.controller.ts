@@ -11,20 +11,20 @@ export class ClassController {
     const data = req.body as CreateClassType;
     const classUseCase = makeClassUseCase();
     const newClass = await classUseCase.create(data);
-    return res.status(201).send(newClass);
+    return res.status(201).json(newClass);
   }
 
   async findBySchool(req: Request, res: Response): Promise<Response> {
     const { schoolId } = req.params as FindClassBySchoolType;
     const classUseCase = makeClassUseCase();
     const classes = await classUseCase.findAllBySchool(schoolId);
-    return res.status(200).send(classes);
+    return res.status(200).json(classes);
   }
 
   async findByGrade(req: Request, res: Response): Promise<Response> {
     const { gradeId } = req.params as FindClassByGradeType;
     const classUseCase = makeClassUseCase();
     const classes = await classUseCase.findAllByGrade(gradeId);
-    return res.status(200).send(classes);
+    return res.status(200).json(classes);
   }
 }

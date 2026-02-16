@@ -16,8 +16,8 @@ export class RefreshTokenRepository implements IRefreshTokenRepository {
     return this.repository.findOne({ where: { token } });
   }
 
-  async create(user: IRefreshToken): Promise<IRefreshToken> {
-    return this.repository.save(user);
+  async create(data: IRefreshToken): Promise<IRefreshToken> {
+    return this.repository.save(data);
   }
 
   async delete(id: string): Promise<void> {

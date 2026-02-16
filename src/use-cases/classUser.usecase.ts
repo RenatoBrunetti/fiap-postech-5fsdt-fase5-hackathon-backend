@@ -4,6 +4,8 @@ import { IClassRepository } from '../repositories/class.repository.interface.js'
 
 import { ApiError } from '../http/errors/api.errors.js';
 
+import { IClassUser } from '../entities/models/classUser.interface.js';
+
 export interface AssignUserRequest {
   userId: string;
   classId: string;
@@ -17,7 +19,7 @@ export class ClassUserUseCase {
     private classRepository: IClassRepository,
   ) {}
 
-  async assign(data: AssignUserRequest) {
+  async assign(data: AssignUserRequest): Promise<IClassUser | null> {
     // 1. Check existing class (Gatekeeper)
     const classExists = await this.classRepository.findById(data.classId);
     if (!classExists) {
@@ -32,8 +34,8 @@ export class ClassUserUseCase {
 
     // 3. Gatekeeper validation (Gatekeeper)
     // Check if the user's role allows them to be in a class
-    const allowedRoles = ['STUDENT', 'TEACHER', 'ADMIN'];
-    const userRole = user.role?.name.toUpperCase();
+    const allowedRoles = ['Student', 'Teacher', 'Admin'];
+    const userRole = user.role?.name;
 
     if (!userRole || !allowedRoles.includes(userRole)) {
       throw new ApiError(
@@ -62,5 +64,18 @@ export class ClassUserUseCase {
 
     // 6. Refetch: Return the created assignment with all details (class and user)
     return await this.classUserRepository.findByIdWithDetails(assignment.id!);
+  }
+
+  async findByUser(userId: string): Promise<IClassUser[]> {
+    // 1. Check if user exists (Gatekeeper)
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new ApiError('User not found', 404);
+    }
+
+    // 2. Fetch all class-user assignments for the user
+    const classUsers = await this.classUserRepository.findAllByUserId(userId);
+
+    return classUsers;
   }
 }

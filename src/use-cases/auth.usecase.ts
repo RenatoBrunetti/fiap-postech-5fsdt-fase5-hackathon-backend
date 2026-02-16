@@ -58,9 +58,11 @@ export class AuthUseCase {
 
     // Refresh token persistence (default 7 days)
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
+    expiresAt.setDate(
+      expiresAt.getDate() +
+        parseInt(env.JWT_REFRESH_EXPIRES_IN.replace('d', '')),
+    );
 
-    if (!user.id) throw new Error('User ID is required for token generation');
     await this.refreshTokenRepository.create({
       token: refreshTokenValue,
       userId: user.id,

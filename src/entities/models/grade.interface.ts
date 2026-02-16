@@ -4,6 +4,7 @@ export interface IGrade {
   id: string;
   name: string;
   category: string;
+  active: boolean;
   createdAt: Date;
   updatedAt: Date;
 

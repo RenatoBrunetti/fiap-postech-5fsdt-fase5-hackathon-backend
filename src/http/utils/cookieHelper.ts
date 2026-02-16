@@ -7,5 +7,11 @@ export const setRefreshTokenCookie = (res: Response, token: string) => {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
     sameSite: 'strict',
+    maxAge:
+      parseInt(env.JWT_REFRESH_EXPIRES_IN.replace('d', '')) *
+      24 *
+      60 *
+      60 *
+      1000, // Convert days to milliseconds
   });
 };

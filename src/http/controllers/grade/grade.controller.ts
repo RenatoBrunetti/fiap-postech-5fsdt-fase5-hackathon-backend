@@ -10,7 +10,7 @@ export class GradeController {
   async findAll(req: Request, res: Response): Promise<Response> {
     const gradeUseCase = makeGradeUseCase();
     const grades = await gradeUseCase.findAll();
-    return res.status(200).send(grades);
+    return res.status(200).json(grades);
   }
 
   async findById(req: Request, res: Response): Promise<Response> {
@@ -19,7 +19,7 @@ export class GradeController {
     const gradeUseCase = makeGradeUseCase();
     const grade = await gradeUseCase.findById(id);
 
-    return res.status(200).send(grade);
+    return res.status(200).json(grade);
   }
 
   async findByName(req: Request, res: Response): Promise<Response> {
@@ -28,7 +28,7 @@ export class GradeController {
     const gradeUseCase = makeGradeUseCase();
     const grade = await gradeUseCase.findByName(name);
 
-    return res.status(200).send(grade);
+    return res.status(200).json(grade);
   }
 
   async findByCategory(req: Request, res: Response): Promise<Response> {
@@ -37,6 +37,6 @@ export class GradeController {
     const gradeUseCase = makeGradeUseCase();
     const grade = await gradeUseCase.findByCategory(category);
 
-    return res.status(200).send(grade);
+    return res.status(200).json(grade);
   }
 }

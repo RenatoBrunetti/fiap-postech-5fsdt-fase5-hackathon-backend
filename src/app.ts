@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import authRoutes from './http/controllers/auth/auth.routes.js';
 import classRoutes from './http/controllers/class/class.routes.js';
 import classUserRoutes from './http/controllers/classUser/classUser.routes.js';
+import feedbackRoutes from './http/controllers/feedback/feedback.routes.js';
 import gradeRoutes from './http/controllers/grade/grade.routes.js';
 import roleRoutes from './http/controllers/role/role.routes.js';
 import schoolRoutes from './http/controllers/school/school.routes.js';
@@ -20,17 +21,18 @@ const app: Application = express();
 
 // Middlewares
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
 // Routes
 app.get('/status', (req: Request, res: Response) => {
-  res.send('API is running');
+  res.json({ message: 'API is running' });
 });
 app.use('/auth', authRoutes);
 app.use('/classes', classRoutes);
 app.use('/classUsers', classUserRoutes);
+app.use('/feedbacks', feedbackRoutes);
 app.use('/grades', gradeRoutes);
 app.use('/roles', roleRoutes);
 app.use('/schools', schoolRoutes);

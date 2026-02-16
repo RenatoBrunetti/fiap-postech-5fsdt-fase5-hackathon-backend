@@ -23,14 +23,6 @@ router.get(
   authorize(['Admin', 'Teacher']),
   gradeController.findAll,
 );
-// Find Grade by ID
-router.get(
-  '/:id',
-  jwtAuth,
-  authorize(['Admin', 'Teacher']),
-  validate(findGradeByIdSchema),
-  gradeController.findById,
-);
 // Find Grade by Name
 router.get(
   '/name/:name',
@@ -46,6 +38,14 @@ router.get(
   authorize(['Admin', 'Teacher']),
   validate(findGradeByCategorySchema),
   gradeController.findByCategory,
+);
+// Find Grade by ID
+router.get(
+  '/:id',
+  jwtAuth,
+  authorize(['Admin', 'Teacher']),
+  validate(findGradeByIdSchema),
+  gradeController.findById,
 );
 
 export default router;
