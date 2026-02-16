@@ -21,7 +21,7 @@ export const appDataSource = new DataSource({
   username: env.DATABASE_USER,
   password: env.DATABASE_PASSWORD,
   database: env.DATABASE_NAME,
-  ssl: env.DATABASE_SSL === 'true' ? true : false,
+  ssl: env.DATABASE_SSL,
   // synchronize: true,
   logging: env.NODE_ENV === 'development',
   entities: [
@@ -40,11 +40,22 @@ export const appDataSource = new DataSource({
   // subscribers: [],
 });
 
-appDataSource
-  .initialize()
-  .then(() => {
-    console.log('Data Source has been initialized!');
-  })
-  .catch((err) => {
+export async function initializeDataSource() {
+  if (appDataSource.isInitialized) return appDataSource;
+  try {
+    const dataSource = await appDataSource.initialize();
+    console.log('Data Source [PostgreSQL] has been initialized.');
+    return dataSource;
+  } catch (err) {
     console.error('Error during Data Source initialization:', err);
-  });
+    // If the database connection fails, exit the process with an error code
+    process.exit(1);
+  }
+}
+
+export async function disconnectDataSource() {
+  if (appDataSource.isInitialized) {
+    await appDataSource.destroy();
+    console.log('Data Source [PostgreSQL] has been disconnected.');
+  }
+}
