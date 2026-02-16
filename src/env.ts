@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import * as z from 'zod';
 
 const schema = z.object({
@@ -19,7 +18,11 @@ const schema = z.object({
   DATABASE_NAME: z.string(),
   DATABASE_PASSWORD: z.string(),
   DATABASE_PORT: z.coerce.number(),
-  DATABASE_SSL: z.string().default('false'),
+  DATABASE_SSL: z.string().transform((value) => {
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+    throw new Error('DATABASE_SSL must be "true" or "false"');
+  }),
 });
 
 const parse = schema.safeParse(process.env);
