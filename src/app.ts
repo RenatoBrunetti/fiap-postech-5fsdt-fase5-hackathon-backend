@@ -11,6 +11,7 @@ import classUserRoutes from './http/controllers/classUser/classUser.routes.js';
 import feedbackRoutes from './http/controllers/feedback/feedback.routes.js';
 import gradeRoutes from './http/controllers/grade/grade.routes.js';
 import roleRoutes from './http/controllers/role/role.routes.js';
+import questionRoutes from './http/controllers/question/question.routes.js';
 import schoolRoutes from './http/controllers/school/school.routes.js';
 import userRoutes from './http/controllers/user/user.routes.js';
 
@@ -35,6 +36,7 @@ app.use('/classUsers', classUserRoutes);
 app.use('/feedbacks', feedbackRoutes);
 app.use('/grades', gradeRoutes);
 app.use('/roles', roleRoutes);
+app.use('/questions', questionRoutes);
 app.use('/schools', schoolRoutes);
 app.use('/users', userRoutes);
 

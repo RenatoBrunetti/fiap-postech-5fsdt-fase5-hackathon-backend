@@ -6,12 +6,14 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 // Models
 import { IQuestion } from './models/question.interface.js';
 
 // Entities
+import { Answer } from './answer.entity.js';
 import { Feedback } from './feedback.entity.js';
 
 @Entity('Question')
@@ -36,6 +38,9 @@ export class Question implements IQuestion {
   @ManyToOne(() => Feedback, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'feedbackId' })
   feedback?: Feedback;
+
+  @OneToMany('Answer', (answer: Answer) => answer.question)
+  answers?: Answer[];
 
   constructor(partial?: Partial<Question>) {
     if (partial) Object.assign(this, partial);
