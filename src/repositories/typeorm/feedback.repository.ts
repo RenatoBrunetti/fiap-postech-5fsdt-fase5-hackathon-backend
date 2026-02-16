@@ -18,15 +18,27 @@ export class FeedbackRepository implements IFeedbackRepository {
     return this.repository.save(data);
   }
 
+  async findById(id: string): Promise<IFeedback | null> {
+    return this.repository.findOne({
+      where: { id },
+      relations: ['questions'],
+      order: { questions: { order: 'ASC' } },
+    });
+  }
+
   async findAllByClassId(classId: string): Promise<IFeedback[]> {
     return this.repository.find({
       where: { classId },
+      relations: ['questions'],
+      order: { questions: { order: 'ASC' } },
     });
   }
 
   async findAllByUserId(userId: string): Promise<IFeedback[]> {
     return this.repository.find({
       where: { userId },
+      relations: ['questions'],
+      order: { questions: { order: 'ASC' } },
     });
   }
 }

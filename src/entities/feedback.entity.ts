@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 // Models
@@ -13,6 +14,7 @@ import { IFeedback } from './models/feedback.interface.js';
 
 // Entities
 import { Class } from './class.entity.js';
+import { Question } from './question.entity.js';
 import { User } from './user.entity.js';
 
 @Entity('Feedback')
@@ -39,6 +41,9 @@ export class Feedback implements IFeedback {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   user?: User;
+
+  @OneToMany('Question', (question: Question) => question.feedback)
+  questions?: Question[];
 
   constructor(partial?: Partial<Feedback>) {
     if (partial) Object.assign(this, partial);

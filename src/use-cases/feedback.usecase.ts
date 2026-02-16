@@ -46,6 +46,14 @@ export class FeedbackUseCase {
     });
   }
 
+  async findById(id: string) {
+    const feedback = await this.feedbackRepository.findById(id);
+    if (!feedback) {
+      throw new ApiError('Feedback not found', 404);
+    }
+    return feedback;
+  }
+
   async findAllByClassId(classId: string) {
     return await this.feedbackRepository.findAllByClassId(classId);
   }

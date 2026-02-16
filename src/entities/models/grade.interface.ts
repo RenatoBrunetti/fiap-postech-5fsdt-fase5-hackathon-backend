@@ -7,6 +7,5 @@ export interface IGrade {
   active: boolean;
   createdAt: Date;
   updatedAt: Date;
-
   classes?: IClass[];
 }
