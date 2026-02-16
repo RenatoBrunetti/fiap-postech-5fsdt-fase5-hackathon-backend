@@ -3,7 +3,7 @@
     "target": "ES2022", // Target the latest stable ECMAScript version for Node.js 22
     "module": "NodeNext", // Use Node's native module resolution strategy
     "moduleResolution": "NodeNext", // Mimic Node's module resolution behavior
-    "lib": ["ES2022", "DOM"], // Include standard libraries, "DOM" for common utility types
+    "lib": ["ES2022"], // Include standard libraries, "DOM" for common utility types
     "outDir": "./dist", // Output directory for compiled JavaScript files
     "rootDir": "./src", // Root directory of your TypeScript source files
     "strict": true, // Enable all strict type-checking options
