@@ -1,6 +1,6 @@
 export interface IAnswer {
   id: string;
-  outcome: string;
+  outcome: number;
   active: boolean;
   questionId: string;
   userId: string;

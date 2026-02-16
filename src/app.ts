@@ -5,6 +5,7 @@ import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 
 // Routes Imports
+import answerRoutes from './http/controllers/answer/answer.routes.js';
 import authRoutes from './http/controllers/auth/auth.routes.js';
 import classRoutes from './http/controllers/class/class.routes.js';
 import classUserRoutes from './http/controllers/classUser/classUser.routes.js';
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.get('/status', (req: Request, res: Response) => {
   res.json({ message: 'API is running' });
 });
+app.use('/answers', answerRoutes);
 app.use('/auth', authRoutes);
 app.use('/classes', classRoutes);
 app.use('/classUsers', classUserRoutes);

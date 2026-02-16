@@ -18,7 +18,7 @@ import { User } from './user.entity.js';
 @Entity('Answer')
 export class Answer implements IAnswer {
   @PrimaryGeneratedColumn('uuid') id!: string;
-  @Column({ type: 'text' }) outcome!: string;
+  @Column({ type: 'integer' }) outcome!: number;
   @Column({ default: true, type: 'boolean' }) active!: boolean;
   @Column({ type: 'uuid' }) questionId!: string;
   @Column({ type: 'uuid' }) userId!: string;
