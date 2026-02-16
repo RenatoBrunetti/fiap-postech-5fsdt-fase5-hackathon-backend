@@ -99,7 +99,7 @@ create index if not exists "idx_question_feedbackid" on "Question" ("feedbackId"
 
 create table if not exists "Answer" (
   "id" uuid primary key default gen_random_uuid(),
-  "outcome" text not null,
+  "outcome" integer not null,
   "active" boolean not null default true,
   "createdAt" timestamptz default current_timestamp,
   "updatedAt" timestamptz default current_timestamp,

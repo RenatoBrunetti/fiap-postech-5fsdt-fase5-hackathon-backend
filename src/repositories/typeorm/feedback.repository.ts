@@ -2,7 +2,10 @@ import { Repository } from 'typeorm';
 
 import { appDataSource } from '../../lib/typeorm/typeorm.js';
 
-import { IFeedback } from '../../entities/models/feedback.interface.js';
+import {
+  IFeedback,
+  IFeedbackStatsRaw,
+} from '../../entities/models/feedback.interface.js';
 import { Feedback } from '../../entities/feedback.entity.js';
 
 import { IFeedbackRepository } from '../feedback.repository.interface.js';
@@ -40,5 +43,19 @@ export class FeedbackRepository implements IFeedbackRepository {
       relations: ['questions'],
       order: { questions: { order: 'ASC' } },
     });
+  }
+
+  async getStats(feedbackId: string): Promise<IFeedbackStatsRaw | undefined> {
+    return this.repository
+      .createQueryBuilder('f')
+      .leftJoin('f.questions', 'q')
+      .leftJoin('q.answers', 'a')
+      .select('f.id', 'feedbackId')
+      .addSelect('f.title', 'title')
+      .addSelect('COUNT(DISTINCT a.userId)', 'totalStudentsAnswered')
+      .addSelect('AVG(a.outcome)', 'averageScore')
+      .where('f.id = :id', { id: feedbackId })
+      .groupBy('f.id')
+      .getRawOne<IFeedbackStatsRaw>();
   }
 }

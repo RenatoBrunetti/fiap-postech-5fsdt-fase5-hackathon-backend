@@ -14,6 +14,13 @@ interface UserPermissionData {
   role: string;
 }
 
+export interface IFeedbackStatsFormatted {
+  feedbackId: string;
+  title: string;
+  totalStudentsAnswered: number;
+  averageScore: number;
+}
+
 export class FeedbackUseCase {
   constructor(
     private feedbackRepository: IFeedbackRepository,
@@ -60,5 +67,30 @@ export class FeedbackUseCase {
 
   async findAllByUserId(userId: string) {
     return await this.feedbackRepository.findAllByUserId(userId);
+  }
+
+  async getStats(
+    feedbackId: string,
+    userRole: string,
+  ): Promise<IFeedbackStatsFormatted> {
+    const feedback = await this.feedbackRepository.findById(feedbackId);
+    if (!feedback) throw new ApiError('Feedback not found', 404);
+
+    if (userRole !== 'Admin') {
+      throw new ApiError('Access denied to these statistics', 403);
+    }
+
+    const stats = await this.feedbackRepository.getStats(feedbackId);
+    if (!stats)
+      throw new ApiError('No statistics available for this feedback', 404);
+
+    return {
+      feedbackId: stats.feedbackId,
+      title: stats.title,
+      totalStudentsAnswered: Number(stats.totalStudentsAnswered) || 0,
+      averageScore: stats.averageScore
+        ? Number(parseFloat(stats.averageScore).toFixed(2))
+        : 0,
+    };
   }
 }

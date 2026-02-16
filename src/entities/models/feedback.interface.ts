@@ -10,3 +10,10 @@ export interface IFeedback {
   updatedAt: Date;
   questions?: IQuestion[];
 }
+
+export interface IFeedbackStatsRaw {
+  feedbackId: string;
+  title: string;
+  totalStudentsAnswered: string;
+  averageScore: string;
+}
