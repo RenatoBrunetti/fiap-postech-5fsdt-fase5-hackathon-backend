@@ -39,7 +39,7 @@ export function jwtAuth(req: Request, res: Response, next: NextFunction) {
     const message =
       err instanceof jwt.TokenExpiredError ? 'Token expired' : 'Invalid token';
     return res.status(401).json({
-      code: ',token.invalid',
+      code: 'token.invalid',
       message,
     });
   }
