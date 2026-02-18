@@ -24,4 +24,17 @@ export class UserController {
     });
     return res.status(201).json(user);
   }
+
+  async findMe(req: Request, res: Response): Promise<Response> {
+    if (!req.user.id) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    const userId = req.user.id;
+    const userUseCase = makeUserUseCase();
+    const user = await userUseCase.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    return res.status(200).json(user);
+  }
 }

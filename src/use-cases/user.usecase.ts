@@ -11,6 +11,10 @@ export class UserUseCase {
     return this.userRepository.findAll();
   }
 
+  async findById(id: string): Promise<IUser | null> {
+    return this.userRepository.findById(id);
+  }
+
   async create(user: IUser): Promise<IUser> {
     // Password validation (redundancy)
     if (!user.password) throw new Error('Password is required');

@@ -8,5 +8,6 @@ export interface IFeedbackRepository {
   findById(id: string): Promise<IFeedback | null>;
   findAllByClassId(classId: string): Promise<IFeedback[]>;
   findAllByUserId(userId: string): Promise<IFeedback[]>;
+  findAllByClassIds(classIds: string[]): Promise<IFeedback[]>;
   getStats(feedbackId: string): Promise<IFeedbackStatsRaw | undefined>;
 }

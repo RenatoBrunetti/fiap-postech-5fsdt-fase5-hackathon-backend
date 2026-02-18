@@ -9,11 +9,12 @@ import { FindByIdType } from './schemas/findById.schema.js';
 
 export class AnswerController {
   async create(req: Request, res: Response): Promise<Response> {
-    const { questions } = req.body as CreateAnswerType;
+    const { questions, feedbackId } = req.body as CreateAnswerType;
     const userId = req.user.id; // Injected by auth middleware
     const answerUseCase = makeAnswerUseCase();
     const answers = await answerUseCase.create({
       userId,
+      feedbackId,
       questions,
     });
     return res.status(201).send(answers);

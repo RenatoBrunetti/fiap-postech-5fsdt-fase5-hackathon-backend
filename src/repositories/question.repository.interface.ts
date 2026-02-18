@@ -4,4 +4,8 @@ export interface IQuestionRepository {
   create(data: Partial<IQuestion>[]): Promise<IQuestion[]>;
   findById(id: string): Promise<IQuestion | null>;
   findAllByFeedbackId(feedbackId: string): Promise<IQuestion[]>;
+  findByIdAndFeedbackId(
+    id: string,
+    feedbackId: string,
+  ): Promise<IQuestion | null>;
 }

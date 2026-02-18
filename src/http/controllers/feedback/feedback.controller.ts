@@ -6,6 +6,7 @@ import { CreateFeedbackType } from './schemas/createFeedback.schema.js';
 import { FindByIdType } from './schemas/findById.schema.js';
 import { FindAllByClassIdType } from './schemas/findAllByClassId.schema.js';
 import { FindAllByUserIdType } from './schemas/findAllByUserId.schema.js';
+import { FindFeedbackStatsType } from './schemas/findFeedbackStatsSchema.js';
 
 export class FeedbackController {
   async create(req: Request, res: Response): Promise<Response> {
@@ -39,5 +40,17 @@ export class FeedbackController {
     const feedbackUseCase = makeFeedbackUseCase();
     const feedbacks = await feedbackUseCase.findAllByUserId(userId);
     return res.status(200).json(feedbacks);
+  }
+
+  async findFeedbackStats(req: Request, res: Response): Promise<Response> {
+    const { feedbackId } = req.params as FindFeedbackStatsType;
+    // User data is added to the request by the authentication middleware
+    const userPermissionData = req.user;
+    const feedbackUseCase = makeFeedbackUseCase();
+    const feedbackStats = await feedbackUseCase.findFeedbackStats(
+      feedbackId,
+      userPermissionData,
+    );
+    return res.status(200).json(feedbackStats);
   }
 }

@@ -17,7 +17,7 @@ export class ClassUserRepository implements IClassUserRepository {
   async findAllByUserId(userId: string): Promise<IClassUser[]> {
     return this.repository.find({
       where: { userId },
-      relations: ['class', 'class.school'],
+      relations: ['class', 'class.school', 'user', 'user.role'],
       select: {
         class: { id: true, name: true, school: { id: true, name: true } },
       },

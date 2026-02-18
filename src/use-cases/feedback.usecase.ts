@@ -1,5 +1,7 @@
+import { IAnswerRepository } from '../repositories/answer.repository.interface.js';
 import { IClassUserRepository } from '../repositories/classUser.repository.interface.js';
 import { IFeedbackRepository } from '../repositories/feedback.repository.interface.js';
+import { IUserRepository } from '../repositories/user.repository.interface.js';
 
 import { ApiError } from '../http/errors/api.errors.js';
 
@@ -25,6 +27,8 @@ export class FeedbackUseCase {
   constructor(
     private feedbackRepository: IFeedbackRepository,
     private classUserRepository: IClassUserRepository,
+    private userRepository: IUserRepository,
+    private answerRepository: IAnswerRepository,
   ) {}
 
   async execute(
@@ -66,17 +70,53 @@ export class FeedbackUseCase {
   }
 
   async findAllByUserId(userId: string) {
-    return await this.feedbackRepository.findAllByUserId(userId);
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new ApiError('User not found', 404);
+    }
+
+    const userAssignments =
+      await this.classUserRepository.findAllByUserId(userId);
+    if (userAssignments.length === 0) {
+      throw new ApiError('You are not assigned to any class', 403);
+    }
+    const classIds = userAssignments.map((assignment) => assignment.classId);
+    const feedbacks = await this.feedbackRepository.findAllByClassIds(classIds);
+
+    let response = [...feedbacks];
+    if (user.role?.name === 'Student') {
+      const questionIds = feedbacks
+        .map((feedback) => feedback.questions?.map((question) => question.id))
+        .flat()
+        .filter((id): id is string => id !== undefined);
+
+      const answers = await this.answerRepository.findAllByQuestionIdsAndUserId(
+        questionIds,
+        userId,
+      );
+
+      // Add a 'isAnswered' property to each feedback based on whether the student has answered all questions in that feedback witoud duplicating feedback data
+      response = feedbacks.map((feedback) => {
+        const feedbackQuestionIds = feedback.questions?.map((q) => q.id) || [];
+        const answeredQuestionIds = answers.map((a) => a.questionId);
+        const isAnswered = feedbackQuestionIds.every((qid) =>
+          answeredQuestionIds.includes(qid),
+        );
+        return { ...feedback, isAnswered };
+      });
+    }
+
+    return response;
   }
 
-  async getStats(
+  async findFeedbackStats(
     feedbackId: string,
-    userRole: string,
+    userPermissionData: UserPermissionData,
   ): Promise<IFeedbackStatsFormatted> {
     const feedback = await this.feedbackRepository.findById(feedbackId);
     if (!feedback) throw new ApiError('Feedback not found', 404);
 
-    if (userRole !== 'Admin') {
+    if (userPermissionData.role === 'Student') {
       throw new ApiError('Access denied to these statistics', 403);
     }
 

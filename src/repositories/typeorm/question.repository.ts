@@ -26,6 +26,16 @@ export class QuestionRepository implements IQuestionRepository {
     });
   }
 
+  async findByIdAndFeedbackId(
+    id: string,
+    feedbackId: string,
+  ): Promise<IQuestion | null> {
+    return this.repository.findOne({
+      where: { id, feedbackId },
+      order: { order: 'ASC' },
+    });
+  }
+
   async findAllByFeedbackId(feedbackId: string): Promise<IQuestion[]> {
     return this.repository.find({
       where: { feedbackId },

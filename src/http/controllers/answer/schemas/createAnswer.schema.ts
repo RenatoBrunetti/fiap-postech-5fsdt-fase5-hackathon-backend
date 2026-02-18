@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const createAnswerSchema = z.object({
   body: z.object({
+    feedbackId: z.string().uuid(),
     questions: z
       .array(
         z.object({

@@ -10,6 +10,7 @@ import { createFeedbackSchema } from './schemas/createFeedback.schema.js';
 import { findByIdSchema } from './schemas/findById.schema.js';
 import { findAllByClassIdSchema } from './schemas/findAllByClassId.schema.js';
 import { findAllByUserIdSchema } from './schemas/findAllByUserId.schema.js';
+import { findFeedbackStatsSchema } from './schemas/findFeedbackStatsSchema.js';
 
 // Controllers
 import { FeedbackController } from './feedback.controller.js';
@@ -39,6 +40,14 @@ router.get(
   authorize(['Admin', 'Teacher', 'Student']),
   validate(findAllByUserIdSchema),
   feedbackController.findAllByUserId,
+);
+
+router.get(
+  '/feedback/:feedbackId',
+  jwtAuth,
+  authorize(['Admin', 'Teacher', 'Student']),
+  validate(findFeedbackStatsSchema),
+  feedbackController.findFeedbackStats,
 );
 
 router.get(

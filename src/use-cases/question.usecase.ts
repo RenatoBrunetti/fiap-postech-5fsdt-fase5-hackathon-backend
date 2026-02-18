@@ -31,7 +31,7 @@ export class QuestionUseCase {
     if (!feedback) throw new ApiError('Feedback not found', 404);
 
     // 2. Property Validation: Only the creator of the Feedback or Admin can add questions
-    if (userPermissionData.role !== 'Admin') {
+    if (userPermissionData.role === 'Student') {
       throw new ApiError(
         'You do not have permission to add questions to this feedback',
         403,

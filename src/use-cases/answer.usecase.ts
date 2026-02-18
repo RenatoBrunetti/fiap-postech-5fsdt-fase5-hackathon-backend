@@ -1,6 +1,7 @@
 import { IAnswerRepository } from '../repositories/answer.repository.interface.js';
 import { IQuestionRepository } from '../repositories/question.repository.interface.js';
 import { IUserRepository } from '../repositories/user.repository.interface.js';
+import { IFeedbackRepository } from '../repositories/feedback.repository.interface.js';
 
 import { ApiError } from '../http/errors/api.errors.js';
 
@@ -11,6 +12,7 @@ interface QuestionDataType {
 
 interface AnswerDataType {
   userId: string;
+  feedbackId: string;
   questions: QuestionDataType[];
 }
 
@@ -18,6 +20,7 @@ export class AnswerUseCase {
   constructor(
     private answerRepository: IAnswerRepository,
     private questionRepository: IQuestionRepository,
+    private feedbackRepository: IFeedbackRepository,
     private userRepository: IUserRepository,
   ) {}
 
@@ -26,11 +29,17 @@ export class AnswerUseCase {
     const user = await this.userRepository.findById(data.userId);
     if (!user) throw new ApiError('User not found', 404);
 
-    // 2. Check if the question exists
+    // 2. Check if feedback exists
+    const feedback = await this.feedbackRepository.findById(data.feedbackId);
+    if (!feedback) throw new ApiError('Feedback not found', 404);
+
+    // 3. Check if the question exists
     for (const question of data.questions) {
-      const questionExists = await this.questionRepository.findById(
-        question.questionId,
-      );
+      const questionExists =
+        await this.questionRepository.findByIdAndFeedbackId(
+          question.questionId,
+          data.feedbackId,
+        );
       if (!questionExists)
         throw new ApiError(
           `Question with id ${question.questionId} not found`,
@@ -38,7 +47,7 @@ export class AnswerUseCase {
         );
     }
 
-    // 3. Persistence
+    // 4. Persistence
     const dataCreate = data.questions.map((question) => ({
       userId: data.userId,
       questionId: question.questionId,

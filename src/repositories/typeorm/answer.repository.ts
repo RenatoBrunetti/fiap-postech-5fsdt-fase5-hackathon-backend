@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { appDataSource } from '../../lib/typeorm/typeorm.js';
 
@@ -27,6 +27,18 @@ export class AnswerRepository implements IAnswerRepository {
   async findAllByQuestionId(questionId: string): Promise<IAnswer[]> {
     return this.repository.find({
       where: { questionId },
+    });
+  }
+
+  async findAllByQuestionIdsAndUserId(
+    questionIds: string[],
+    userId: string,
+  ): Promise<IAnswer[]> {
+    return this.repository.find({
+      where: {
+        questionId: In(questionIds),
+        userId,
+      },
     });
   }
 }

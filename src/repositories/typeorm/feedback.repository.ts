@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { appDataSource } from '../../lib/typeorm/typeorm.js';
 
@@ -24,7 +24,7 @@ export class FeedbackRepository implements IFeedbackRepository {
   async findById(id: string): Promise<IFeedback | null> {
     return this.repository.findOne({
       where: { id },
-      relations: ['questions'],
+      relations: ['questions', 'class', 'class.school', 'user'],
       order: { questions: { order: 'ASC' } },
     });
   }
@@ -32,7 +32,7 @@ export class FeedbackRepository implements IFeedbackRepository {
   async findAllByClassId(classId: string): Promise<IFeedback[]> {
     return this.repository.find({
       where: { classId },
-      relations: ['questions'],
+      relations: ['questions', 'class', 'class.school', 'user'],
       order: { questions: { order: 'ASC' } },
     });
   }
@@ -40,7 +40,15 @@ export class FeedbackRepository implements IFeedbackRepository {
   async findAllByUserId(userId: string): Promise<IFeedback[]> {
     return this.repository.find({
       where: { userId },
-      relations: ['questions'],
+      relations: ['questions', 'class', 'class.school', 'user'],
+      order: { questions: { order: 'ASC' } },
+    });
+  }
+
+  async findAllByClassIds(classIds: string[]): Promise<IFeedback[]> {
+    return this.repository.find({
+      where: { classId: In(classIds) },
+      relations: ['questions', 'class', 'class.school', 'user'],
       order: { questions: { order: 'ASC' } },
     });
   }

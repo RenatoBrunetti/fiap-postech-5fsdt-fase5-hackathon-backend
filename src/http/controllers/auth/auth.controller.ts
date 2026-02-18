@@ -8,8 +8,8 @@ import { AuthLoginBody } from './schemas/login.schema.js';
 export class AuthController {
   async login(req: Request, res: Response): Promise<Response> {
     const { email, password }: AuthLoginBody = req.body;
-    const authUseCase = makeAuthUseCase();
 
+    const authUseCase = makeAuthUseCase();
     const authentication = await authUseCase.authenticate(email, password);
     if (!authentication) {
       return res.status(401).json({ message: 'Invalid credentials' });

@@ -28,14 +28,16 @@ export class AuthUseCase {
   async authenticate(
     email: string,
     password: string,
-  ): Promise<IAuthTokens | null> {
+  ): Promise<(IAuthTokens & { user: IUser }) | null> {
     const user = await this.userRepository.findByEmailLogin(email);
     if (!user) return null;
 
     if (password && user.password) {
       const passwordMatch = await comparePassword(password, user.password);
       if (!passwordMatch) return null;
-      return this.generateTokens(user);
+      delete user.password; // Remove password before returning user data
+      const tokens = await this.generateTokens(user);
+      return { ...tokens, user };
     }
 
     return null;
@@ -72,7 +74,7 @@ export class AuthUseCase {
     return { accessToken, refreshToken: refreshTokenValue };
   }
 
-  async refreshToken(token: string): Promise<IAuthTokens> {
+  async refreshToken(token: string): Promise<IAuthTokens & { user: IUser }> {
     // 1. Check token validity and JWT expiration
     const decoded = jwt.verify(token, this.refreshSecret) as { sub: string };
 
@@ -87,7 +89,9 @@ export class AuthUseCase {
     const user = await this.userRepository.findById(decoded.sub);
     if (!user) throw new Error('User not found');
 
-    return this.generateTokens(user);
+    delete user.password; // Remove password before returning user data
+    const tokens = await this.generateTokens(user);
+    return { ...tokens, user };
   }
 
   async logout(token: string): Promise<void> {

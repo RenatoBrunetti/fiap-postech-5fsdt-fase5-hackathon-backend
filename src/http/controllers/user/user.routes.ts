@@ -24,5 +24,7 @@ router.post(
 );
 // Find All Users
 router.get('/', jwtAuth, authorize(['Admin']), userController.findAll);
+// Find Me
+router.get('/me', jwtAuth, userController.findMe);
 
 export default router;
