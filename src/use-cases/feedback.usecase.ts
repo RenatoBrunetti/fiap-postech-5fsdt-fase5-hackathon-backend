@@ -2,13 +2,23 @@ import { IAnswerRepository } from '../repositories/answer.repository.interface.j
 import { IClassUserRepository } from '../repositories/classUser.repository.interface.js';
 import { IFeedbackRepository } from '../repositories/feedback.repository.interface.js';
 import { IUserRepository } from '../repositories/user.repository.interface.js';
+import { IQuestionRepository } from '../repositories/question.repository.interface.js';
 
 import { ApiError } from '../http/errors/api.errors.js';
+import { IFeedback } from '../entities/models/feedback.interface.js';
 
 interface CreateFeedbackType {
   title: string;
   classId: string;
   userId: string;
+}
+
+interface CreateFeedbackQuestionType extends CreateFeedbackType {
+  questions: {
+    title: string;
+    description?: string;
+    order: number;
+  }[];
 }
 
 interface UserPermissionData {
@@ -29,9 +39,10 @@ export class FeedbackUseCase {
     private classUserRepository: IClassUserRepository,
     private userRepository: IUserRepository,
     private answerRepository: IAnswerRepository,
+    private questionRepository: IQuestionRepository,
   ) {}
 
-  async execute(
+  async create(
     data: CreateFeedbackType,
     userPermissionData: UserPermissionData,
   ) {
@@ -57,12 +68,57 @@ export class FeedbackUseCase {
     });
   }
 
-  async findById(id: string) {
+  async createFeedbackAndQuestions(data: CreateFeedbackQuestionType) {
+    const { title, classId, userId, questions } = data;
+    console.log('****', data);
+    const feedback = await this.feedbackRepository.create({
+      title,
+      classId,
+      userId,
+    });
+    console.log('**** feedback', feedback);
+    if (!feedback) {
+      throw new ApiError('Failed to create feedback', 500);
+    }
+    const dataCreate = questions.map((question) => ({
+      ...question,
+      feedbackId: feedback.id,
+    }));
+    console.log('**** dataCreate', dataCreate);
+    const questionsCreate = await this.questionRepository.create(dataCreate);
+    console.log('**** questionsCreate', questionsCreate);
+    if (!questionsCreate) {
+      throw new ApiError('Failed to create questions', 500);
+    }
+
+    return await this.feedbackRepository.findById(feedback.id);
+  }
+
+  async findById(id: string, userPermissionData: UserPermissionData) {
     const feedback = await this.feedbackRepository.findById(id);
     if (!feedback) {
       throw new ApiError('Feedback not found', 404);
     }
-    return feedback;
+
+    const response: IFeedback & { isAnswered?: boolean } = { ...feedback };
+    if (userPermissionData.role === 'Student') {
+      const questionIds =
+        feedback.questions?.map((question) => question.id) || [];
+      const answers = await this.answerRepository.findAllByQuestionIdsAndUserId(
+        questionIds,
+        userPermissionData.id,
+      );
+
+      // Add a 'isAnswered' property to the feedback based on whether the student has answered all questions in that feedback without duplicating feedback data
+      const feedbackQuestionIds = feedback.questions?.map((q) => q.id) || [];
+      const answeredQuestionIds = answers.map((a) => a.questionId);
+      const isAnswered = feedbackQuestionIds.every((qid) =>
+        answeredQuestionIds.includes(qid),
+      );
+      response['isAnswered'] = isAnswered;
+    }
+
+    return response;
   }
 
   async findAllByClassId(classId: string) {

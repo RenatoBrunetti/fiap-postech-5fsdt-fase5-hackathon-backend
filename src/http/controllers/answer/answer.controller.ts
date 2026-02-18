@@ -27,6 +27,13 @@ export class AnswerController {
     return res.status(200).send(answers);
   }
 
+  async findAllByFeedbackId(req: Request, res: Response): Promise<Response> {
+    const { feedbackId } = req.params as { feedbackId: string };
+    const answerUseCase = makeAnswerUseCase();
+    const answers = await answerUseCase.findAllByFeedbackId(feedbackId);
+    return res.status(200).send(answers);
+  }
+
   async findById(req: Request, res: Response): Promise<Response> {
     const { id } = req.params as FindByIdType;
     const answerUseCase = makeAnswerUseCase();

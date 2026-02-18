@@ -30,6 +30,14 @@ export class AnswerRepository implements IAnswerRepository {
     });
   }
 
+  async findAllByQuestionIds(questionIds: string[]): Promise<IAnswer[]> {
+    return this.repository.find({
+      where: { questionId: In(questionIds) },
+      relations: ['question'],
+      order: { question: { order: 'ASC' } },
+    });
+  }
+
   async findAllByQuestionIdsAndUserId(
     questionIds: string[],
     userId: string,

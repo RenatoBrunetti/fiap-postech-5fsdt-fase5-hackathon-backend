@@ -4,6 +4,7 @@ export interface IAnswerRepository {
   create(data: Partial<IAnswer>[]): Promise<IAnswer[]>;
   findById(id: string): Promise<IAnswer | null>;
   findAllByQuestionId(questionId: string): Promise<IAnswer[]>;
+  findAllByQuestionIds(questionIds: string[]): Promise<IAnswer[]>;
   findAllByQuestionIdsAndUserId(
     questionIds: string[],
     userId: string,

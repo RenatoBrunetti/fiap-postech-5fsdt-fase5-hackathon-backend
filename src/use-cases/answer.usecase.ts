@@ -56,16 +56,24 @@ export class AnswerUseCase {
     return await this.answerRepository.create(dataCreate);
   }
 
-  async findById(id: string) {
-    return await this.answerRepository.findById(id);
-  }
-
   async findAllByQuestionId(questionId: string) {
-    // 1. Check if the question exists
     const question = await this.questionRepository.findById(questionId);
     if (!question) throw new ApiError('Question not found', 404);
-
-    // 2. Persistence
     return await this.answerRepository.findAllByQuestionId(questionId);
+  }
+
+  async findAllByFeedbackId(feedbackId: string) {
+    const feedback = await this.feedbackRepository.findById(feedbackId);
+    if (!feedback) throw new ApiError('Feedback not found', 404);
+
+    const questionIds =
+      feedback.questions?.map((question) => question.id) || [];
+    if (questionIds.length === 0) return [];
+
+    return await this.answerRepository.findAllByQuestionIds(questionIds);
+  }
+
+  async findById(id: string) {
+    return await this.answerRepository.findById(id);
   }
 }

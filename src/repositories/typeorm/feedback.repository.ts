@@ -25,7 +25,7 @@ export class FeedbackRepository implements IFeedbackRepository {
     return this.repository.findOne({
       where: { id },
       relations: ['questions', 'class', 'class.school', 'user'],
-      order: { questions: { order: 'ASC' } },
+      order: { createdAt: 'DESC', questions: { order: 'ASC' } },
     });
   }
 
@@ -33,7 +33,7 @@ export class FeedbackRepository implements IFeedbackRepository {
     return this.repository.find({
       where: { classId },
       relations: ['questions', 'class', 'class.school', 'user'],
-      order: { questions: { order: 'ASC' } },
+      order: { createdAt: 'DESC', questions: { order: 'ASC' } },
     });
   }
 
@@ -41,7 +41,7 @@ export class FeedbackRepository implements IFeedbackRepository {
     return this.repository.find({
       where: { userId },
       relations: ['questions', 'class', 'class.school', 'user'],
-      order: { questions: { order: 'ASC' } },
+      order: { createdAt: 'DESC', questions: { order: 'ASC' } },
     });
   }
 
@@ -49,7 +49,7 @@ export class FeedbackRepository implements IFeedbackRepository {
     return this.repository.find({
       where: { classId: In(classIds) },
       relations: ['questions', 'class', 'class.school', 'user'],
-      order: { questions: { order: 'ASC' } },
+      order: { createdAt: 'DESC', questions: { order: 'ASC' } },
     });
   }
 

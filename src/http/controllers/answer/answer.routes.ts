@@ -8,6 +8,7 @@ import { validate } from '../../middlewares/validate.js';
 // Schemas
 import { createAnswerSchema } from './schemas/createAnswer.schema.js';
 import { findAllByQuestionIdSchema } from './schemas/findAllByQuestionId.schema.js';
+import { findAllByFeedbackIdSchema } from './schemas/findAllByFeedbackId.schema.js';
 import { findByIdSchema } from './schemas/findById.schema.js';
 
 // Controllers
@@ -32,6 +33,14 @@ router.get(
   authorize(['Teacher', 'Admin']),
   validate(findAllByQuestionIdSchema),
   answerController.findAllByQuestionId,
+);
+
+router.get(
+  '/feedback/:feedbackId',
+  jwtAuth,
+  authorize(['Teacher', 'Admin', 'Student']),
+  validate(findAllByFeedbackIdSchema),
+  answerController.findAllByFeedbackId,
 );
 
 router.get(
