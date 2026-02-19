@@ -33,4 +33,8 @@ export class SchoolRepository implements ISchoolRepository {
   async create(data: Partial<ISchool>): Promise<ISchool> {
     return this.repository.save(data);
   }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.update(id, { active: false });
+  }
 }

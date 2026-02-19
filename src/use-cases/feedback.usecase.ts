@@ -70,13 +70,11 @@ export class FeedbackUseCase {
 
   async createFeedbackAndQuestions(data: CreateFeedbackQuestionType) {
     const { title, classId, userId, questions } = data;
-    console.log('****', data);
     const feedback = await this.feedbackRepository.create({
       title,
       classId,
       userId,
     });
-    console.log('**** feedback', feedback);
     if (!feedback) {
       throw new ApiError('Failed to create feedback', 500);
     }
@@ -84,9 +82,7 @@ export class FeedbackUseCase {
       ...question,
       feedbackId: feedback.id,
     }));
-    console.log('**** dataCreate', dataCreate);
     const questionsCreate = await this.questionRepository.create(dataCreate);
-    console.log('**** questionsCreate', questionsCreate);
     if (!questionsCreate) {
       throw new ApiError('Failed to create questions', 500);
     }

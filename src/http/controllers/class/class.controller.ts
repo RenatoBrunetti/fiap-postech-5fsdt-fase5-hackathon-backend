@@ -27,4 +27,11 @@ export class ClassController {
     const classes = await classUseCase.findAllByGrade(gradeId);
     return res.status(200).json(classes);
   }
+
+  async findById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params as { id: string };
+    const classUseCase = makeClassUseCase();
+    const classData = await classUseCase.findById(id);
+    return res.status(200).json(classData);
+  }
 }

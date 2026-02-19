@@ -29,5 +29,14 @@ router.get(
   authorize(['Admin', 'Teacher']),
   schoolController.findAll,
 );
+// Delete School
+router.delete('/:id', jwtAuth, authorize(['Admin']), schoolController.delete);
+// Find School By Id
+router.get(
+  '/:id',
+  jwtAuth,
+  authorize(['Admin', 'Teacher']),
+  schoolController.findById,
+);
 
 export default router;

@@ -49,4 +49,10 @@ export class ClassUseCase {
   async findAllByGrade(gradeId: string): Promise<IClass[]> {
     return await this.classRepository.findAllByGrade(gradeId);
   }
+
+  async findById(id: string): Promise<IClass> {
+    const classData = await this.classRepository.findById(id);
+    if (!classData) throw new ApiError('Class not found', 404);
+    return classData;
+  }
 }

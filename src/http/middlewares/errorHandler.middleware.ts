@@ -12,6 +12,7 @@ export function errorHandler(
 ) {
   // 1. Validation Errors (Zod)
   if (error instanceof ZodError) {
+    console.error('[Validation Error]:', error);
     return res.status(400).json({
       message: 'Validation error',
       issues: error.format(),
@@ -20,6 +21,7 @@ export function errorHandler(
 
   // 2. Business Errors (Our ApiErrors)
   if (error instanceof ApiError) {
+    console.error('[Validation Error]:', error);
     return res.status(error.statusCode).json({
       message: error.message,
     });

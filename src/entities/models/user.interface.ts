@@ -1,5 +1,6 @@
 import { IRole } from './role.interface.js';
 import { IRefreshToken } from './refreshToken.interface.js';
+import { IClassUser } from './classUser.interface.js';
 
 export interface IUser {
   id?: string;
@@ -13,4 +14,5 @@ export interface IUser {
   roleId: string;
   role?: IRole;
   refreshTokens?: IRefreshToken[];
+  classUsers?: IClassUser[];
 }

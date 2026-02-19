@@ -5,4 +5,5 @@ export interface ISchoolRepository {
   findById(id: string): Promise<ISchool | null>;
   findByDocument(document: string): Promise<ISchool | null>;
   create(data: Partial<ISchool>): Promise<ISchool>;
+  delete(id: string): Promise<void>;
 }

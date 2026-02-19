@@ -12,6 +12,14 @@ export class ClassUserController {
     return res.status(201).json(assignment);
   }
 
+  async unassign(req: Request, res: Response): Promise<Response> {
+    const data = req.body;
+    console.log('$$$$$ unassigning user from class with data:', data);
+    const classUserUseCase = makeClassUserUseCase();
+    await classUserUseCase.unassign(data);
+    return res.status(204).send();
+  }
+
   async findByUser(req: Request, res: Response): Promise<Response> {
     const { userId } = req.params as FindByUserType;
     const classUserUseCase = makeClassUserUseCase();

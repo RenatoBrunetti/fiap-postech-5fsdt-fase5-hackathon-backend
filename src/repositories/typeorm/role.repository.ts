@@ -15,4 +15,8 @@ export class RoleRepository implements IRoleRepository {
   async findAll(): Promise<IRole[]> {
     return this.repository.find();
   }
+
+  async findByName(name: string): Promise<IRole | null> {
+    return this.repository.findOne({ where: { name } });
+  }
 }

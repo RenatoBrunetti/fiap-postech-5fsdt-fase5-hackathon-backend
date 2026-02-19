@@ -66,6 +66,33 @@ export class ClassUserUseCase {
     return await this.classUserRepository.findByIdWithDetails(assignment.id!);
   }
 
+  async unassign(data: {
+    userId: string;
+    classId: string;
+    endDate?: Date;
+  }): Promise<void> {
+    // 1. Check if the assignment exists
+    const existingAssignment =
+      await this.classUserRepository.findByUserAndClass(
+        data.userId,
+        data.classId,
+      );
+    if (!existingAssignment) {
+      throw new ApiError('Assignment not found', 404);
+    }
+
+    // 2. Unassign the user from the class (soft delete by setting active to false and endDate)
+    const updatePayload = {
+      active: false,
+      endDate: data.endDate || new Date(),
+    };
+
+    await this.classUserRepository.update(
+      existingAssignment.id!,
+      updatePayload,
+    );
+  }
+
   async findByUser(userId: string): Promise<IClassUser[]> {
     // 1. Check if user exists (Gatekeeper)
     const user = await this.userRepository.findById(userId);

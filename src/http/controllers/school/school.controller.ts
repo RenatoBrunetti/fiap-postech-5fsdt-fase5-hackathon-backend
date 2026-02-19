@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { makeSchoolUseCase } from '../../../use-cases/factories/make.school.js';
 
+// Schemas
 import { CreateSchoolType } from './schemas/createSchool.schema.js';
 
 export class SchoolController {
@@ -19,5 +20,19 @@ export class SchoolController {
     const schools = await schoolUseCase.findAll();
 
     return res.status(200).json(schools);
+  }
+
+  async findById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params as { id: string };
+    const schoolUseCase = makeSchoolUseCase();
+    const school = await schoolUseCase.findById(id);
+    return res.status(200).json(school);
+  }
+
+  async delete(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params as { id: string };
+    const schoolUseCase = makeSchoolUseCase();
+    await schoolUseCase.delete(id);
+    return res.status(204).send();
   }
 }

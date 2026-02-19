@@ -7,6 +7,7 @@ import { validate } from '../../middlewares/validate.js';
 
 // Schemas
 import { assignClassSchema } from './schemas/assignClass.schema.js';
+import { unassignClassSchema } from './schemas/unassignClass.schema.js';
 import { findByUserSchema } from './schemas/findByUser.schema.js';
 
 // Controllers
@@ -22,6 +23,15 @@ router.post(
   authorize(['Admin']),
   validate(assignClassSchema),
   classUserController.assign,
+);
+
+// Unassign User from Class
+router.post(
+  '/unassign',
+  jwtAuth,
+  authorize(['Admin']),
+  validate(unassignClassSchema),
+  classUserController.unassign,
 );
 
 router.get(

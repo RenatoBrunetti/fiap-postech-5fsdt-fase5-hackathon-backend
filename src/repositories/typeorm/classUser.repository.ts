@@ -49,7 +49,19 @@ export class ClassUserRepository implements IClassUserRepository {
     });
   }
 
+  async findByClass(classId: string): Promise<IClassUser[]> {
+    return this.repository.find({
+      where: { classId, active: true },
+      relations: ['user', 'class', 'user.role', 'class.school'],
+    });
+  }
+
   async create(data: Partial<IClassUser>): Promise<IClassUser> {
     return this.repository.save(data);
+  }
+
+  async update(id: string, data: Partial<IClassUser>): Promise<IClassUser> {
+    await this.repository.update(id, data);
+    return this.repository.findOneBy({ id }) as Promise<IClassUser>;
   }
 }

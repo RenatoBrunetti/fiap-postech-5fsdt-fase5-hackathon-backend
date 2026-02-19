@@ -40,5 +40,12 @@ router.get(
   validate(findClassByGradeSchema),
   classController.findByGrade,
 );
+// Find Classes By Id
+router.get(
+  '/:id',
+  jwtAuth,
+  authorize(['Admin', 'Teacher']),
+  classController.findById,
+);
 
 export default router;
