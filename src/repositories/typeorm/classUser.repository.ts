@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { appDataSource } from '../../lib/typeorm/typeorm.js';
 
@@ -12,6 +12,9 @@ export class ClassUserRepository implements IClassUserRepository {
 
   constructor() {
     this.repository = appDataSource.getRepository(ClassUser);
+  }
+  findBySchool(schoolId: string): Promise<IClassUser[]> {
+    throw new Error('Method not implemented.');
   }
 
   async findAllByUserId(userId: string): Promise<IClassUser[]> {
@@ -52,6 +55,13 @@ export class ClassUserRepository implements IClassUserRepository {
   async findByClass(classId: string): Promise<IClassUser[]> {
     return this.repository.find({
       where: { classId, active: true },
+      relations: ['user', 'class', 'user.role', 'class.school'],
+    });
+  }
+
+  async findAllByClassIds(classIds: string[]): Promise<IClassUser[]> {
+    return this.repository.find({
+      where: { classId: In(classIds), active: true },
       relations: ['user', 'class', 'user.role', 'class.school'],
     });
   }

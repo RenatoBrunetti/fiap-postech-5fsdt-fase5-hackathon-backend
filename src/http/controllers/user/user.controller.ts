@@ -13,6 +13,13 @@ export class UserController {
     return res.status(200).json(users);
   }
 
+  async findById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params as { id: string };
+    const userUseCase = makeUserUseCase();
+    const user = await userUseCase.findById(id);
+    return res.status(200).json(user);
+  }
+
   async create(req: Request, res: Response): Promise<Response> {
     const { name, email, password, document, roleId }: CreateUserBody =
       req.body;
@@ -36,6 +43,7 @@ export class UserController {
       roleId,
       classId,
     }: CreateAndAssignBody = req.body;
+    console.log('Received data for createAndAssign:', req.body);
     const userUseCase = makeUserUseCase();
     const user = await userUseCase.createAndAssign({
       name,
@@ -65,6 +73,13 @@ export class UserController {
     const { roleName } = req.params as { roleName: string };
     const userUseCase = makeUserUseCase();
     const users = await userUseCase.findAllByRoleName(roleName);
+    return res.status(200).json(users);
+  }
+
+  async findTeachersBySchool(req: Request, res: Response): Promise<Response> {
+    const { schoolId } = req.params as { schoolId: string };
+    const userUseCase = makeUserUseCase();
+    const users = await userUseCase.findAllBySchool(schoolId, 'Teacher');
     return res.status(200).json(users);
   }
 

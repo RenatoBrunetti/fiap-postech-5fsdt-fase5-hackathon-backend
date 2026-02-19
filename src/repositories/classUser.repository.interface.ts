@@ -5,6 +5,7 @@ export interface IClassUserRepository {
   update(id: string, data: Partial<IClassUser>): Promise<IClassUser>;
   findAllByUserId(userId: string): Promise<IClassUser[]>;
   findByClass(classId: string): Promise<IClassUser[]>;
+  findAllByClassIds(classIds: string[]): Promise<IClassUser[]>;
   findByUserAndClass(
     userId: string,
     classId: string,

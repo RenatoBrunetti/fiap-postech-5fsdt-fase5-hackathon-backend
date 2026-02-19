@@ -2,6 +2,7 @@ import { IClass } from '../entities/models/class.interface.js';
 
 export interface IClassRepository {
   findById(id: string): Promise<IClass | null>;
+  findAllByIds(ids: string[]): Promise<IClass[]>;
   findAllBySchool(schoolId: string): Promise<IClass[]>;
   findAllByGrade(gradeId: string): Promise<IClass[]>;
   findByNameAndYear(

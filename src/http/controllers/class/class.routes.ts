@@ -12,6 +12,7 @@ import { findClassByGradeSchema } from './schemas/findClassByGrade.schema.js';
 
 // Controllers
 import { ClassController } from './class.controller.js';
+import { findClassByUserSchema } from './schemas/findClassByUser.schema.js';
 
 const classController = new ClassController();
 const router = Router();
@@ -39,6 +40,14 @@ router.get(
   authorize(['Admin', 'Teacher']),
   validate(findClassByGradeSchema),
   classController.findByGrade,
+);
+// Find Classes By User
+router.get(
+  '/user/:userId',
+  jwtAuth,
+  authorize(['Admin', 'Teacher', 'Student']),
+  validate(findClassByUserSchema),
+  classController.findByUser,
 );
 // Find Classes By Id
 router.get(

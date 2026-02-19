@@ -2,6 +2,7 @@ import { IUser } from '../entities/models/user.interface.js';
 
 import { hashPassword } from '../lib/bcrypt/hash-password.js';
 
+import { IClassRepository } from '../repositories/class.repository.interface.js';
 import { IClassUserRepository } from '../repositories/classUser.repository.interface.js';
 import { IRoleRepository } from '../repositories/role.repository.interface.js';
 import { IUserRepository } from '../repositories/user.repository.interface.js';
@@ -10,6 +11,7 @@ export class UserUseCase {
   constructor(
     private userRepository: IUserRepository,
     private roleRepository: IRoleRepository,
+    private classRepository: IClassRepository,
     private classUserRepository: IClassUserRepository,
   ) {}
 
@@ -18,11 +20,29 @@ export class UserUseCase {
   }
 
   async findById(id: string): Promise<IUser | null> {
-    return this.userRepository.findById(id);
+    const user = await this.userRepository.findById(id);
+    if (!user) throw new Error('User not found');
+    return user;
   }
 
   async findAllByRoleName(roleName: string): Promise<IUser[]> {
     const users = await this.userRepository.findAll();
+    return users.filter((user) => user.role?.name === roleName);
+  }
+
+  async findAllBySchool(schoolId: string, roleName: string): Promise<IUser[]> {
+    const classes = await this.classRepository.findAllBySchool(schoolId);
+    if (!classes.length) {
+      return [];
+    }
+    const classIds = classes.map((c) => c.id);
+    const classUsers =
+      await this.classUserRepository.findAllByClassIds(classIds);
+    if (!classUsers.length) {
+      return [];
+    }
+    const userIds = classUsers.map((cu) => cu.userId);
+    const users = await this.userRepository.findAllByIds(userIds);
     return users.filter((user) => user.role?.name === roleName);
   }
 
@@ -76,7 +96,7 @@ export class UserUseCase {
     password: string;
     document: string;
     roleId: string;
-    classId: string;
+    classId?: string;
   }): Promise<IUser> {
     // Password validation (redundancy)
     if (!data.password) throw new Error('Password is required');
@@ -87,11 +107,16 @@ export class UserUseCase {
     const hashedPassword = await hashPassword(data.password);
     // Create the user with the hashed password
     const userToCreate = { ...data, password: hashedPassword };
+    let createdUser: IUser;
     const { classId, ...userData } = userToCreate;
-    const createdUser = await this.userRepository.createAndAssign(
-      userData,
-      classId,
-    );
+    if (classId) {
+      createdUser = await this.userRepository.createAndAssign(
+        userData,
+        classId,
+      );
+    } else {
+      createdUser = await this.userRepository.create(userData);
+    }
     if (!createdUser) throw new Error('Failed to create user');
     // Remove password from the returned user object for security reasons
     delete createdUser.password;

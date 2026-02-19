@@ -1,6 +1,7 @@
 import { IClass } from '../entities/models/class.interface.js';
 
 import { IClassRepository } from '../repositories/class.repository.interface.js';
+import { IClassUserRepository } from '../repositories/classUser.repository.interface.js';
 import { ISchoolRepository } from '../repositories/school.repository.interface.js';
 import { IGradeRepository } from '../repositories/grade.repository.interface.js';
 
@@ -9,6 +10,7 @@ import { ApiError } from '../http/errors/api.errors.js';
 export class ClassUseCase {
   constructor(
     private classRepository: IClassRepository,
+    private classUserRepository: IClassUserRepository,
     private schoolRepository: ISchoolRepository,
     private gradeRepository: IGradeRepository,
   ) {}
@@ -48,6 +50,13 @@ export class ClassUseCase {
 
   async findAllByGrade(gradeId: string): Promise<IClass[]> {
     return await this.classRepository.findAllByGrade(gradeId);
+  }
+
+  async findAllByUser(userId: string): Promise<IClass[]> {
+    const classUsers = await this.classUserRepository.findAllByUserId(userId);
+    if (!classUsers.length) return [];
+    const classIds = classUsers.map((cu) => cu.classId);
+    return this.classRepository.findAllByIds(classIds);
   }
 
   async findById(id: string): Promise<IClass> {

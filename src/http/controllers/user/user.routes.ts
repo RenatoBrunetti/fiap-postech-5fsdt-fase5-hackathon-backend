@@ -9,8 +9,10 @@ import { validate } from '../../middlewares/validate.js';
 import { createUserBodySchema } from './schemas/createUser.schema.js';
 import { createAndAssignSchema } from './schemas/createAndAssign.schema.js';
 import { findByRoleNameSchema } from './schemas/findByRoleName.schema.js';
+import { findBySchoolSchema } from './schemas/findBySchoolName.schema.js';
 import { searchUsersSchema } from './schemas/searchUsers.schema.js';
 import { findByClassSchema } from './schemas/findByClass.schema.js';
+import { findByIdSchema } from './schemas/findById.schema.js';
 
 // Controllers
 import { UserController } from './user.controller.js';
@@ -45,6 +47,14 @@ router.get(
   validate(findByRoleNameSchema),
   userController.findAllByRoleName,
 );
+// Find All Users By School
+router.get(
+  '/teachers/school/:schoolId',
+  jwtAuth,
+  authorize(['Admin']),
+  validate(findBySchoolSchema),
+  userController.findTeachersBySchool,
+);
 // Find Me
 router.get('/me', jwtAuth, userController.findMe);
 // Search Users by RoleName and SearchQuery
@@ -70,6 +80,14 @@ router.get(
   authorize(['Admin', 'Teacher']),
   validate(findByClassSchema),
   userController.findTeachersByClass,
+);
+
+router.get(
+  '/:id',
+  jwtAuth,
+  authorize(['Admin', 'Teacher', 'Student']),
+  validate(findByIdSchema),
+  userController.findById,
 );
 
 export default router;

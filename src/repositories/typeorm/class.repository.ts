@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { appDataSource } from '../../lib/typeorm/typeorm.js';
 import { IClass } from '../../entities/models/class.interface.js';
@@ -15,6 +15,17 @@ export class ClassRepository implements IClassRepository {
   async findById(id: string): Promise<IClass | null> {
     return this.repository.findOne({
       where: { id, active: true },
+      relations: ['school', 'grade'],
+      select: {
+        school: { id: true, name: true },
+        grade: { id: true, name: true },
+      },
+    });
+  }
+
+  async findAllByIds(ids: string[]): Promise<IClass[]> {
+    return this.repository.find({
+      where: { id: In(ids), active: true },
       relations: ['school', 'grade'],
       select: {
         school: { id: true, name: true },

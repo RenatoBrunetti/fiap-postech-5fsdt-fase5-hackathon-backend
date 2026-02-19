@@ -19,7 +19,7 @@ export const createAndAssignSchema = z
       confirmPassword: z.string(),
       document: z.string().length(11),
       roleId: z.string(),
-      classId: z.string(),
+      classId: z.string().optional(),
     }),
   })
   .refine((data) => data.body.password === data.body.confirmPassword, {

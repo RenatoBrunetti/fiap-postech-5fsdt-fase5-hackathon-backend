@@ -28,6 +28,13 @@ export class ClassController {
     return res.status(200).json(classes);
   }
 
+  async findByUser(req: Request, res: Response): Promise<Response> {
+    const { userId } = req.params as { userId: string };
+    const classUseCase = makeClassUseCase();
+    const classes = await classUseCase.findAllByUser(userId);
+    return res.status(200).json(classes);
+  }
+
   async findById(req: Request, res: Response): Promise<Response> {
     const { id } = req.params as { id: string };
     const classUseCase = makeClassUseCase();
