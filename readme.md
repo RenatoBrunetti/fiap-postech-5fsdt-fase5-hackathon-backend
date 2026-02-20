@@ -48,15 +48,15 @@ O **Hackathon Feedback API** é o serviço de back-end do projeto do hackathon c
 
 - **Node.js** e **TypeScript** para runtime e tipagem.
 - **Express** para a API REST.
-- **TypeORM** com **PostgreSQL** para persistencia.
-- **JWT** para autenticacao e autorização.
+- **TypeORM** com **PostgreSQL** para persistência.
+- **JWT** para autenticação e autorização.
 - **Zod** para validação de schemas.
 - **Docker / Docker Compose** para conteinerização e banco local.
 - **Jest**, **ESLint** e **Prettier** para testes e qualidade.
 
 ## → Arquitetura do sistema
 
-O backend segue uma separacao clara de responsabilidades entre **rotas**, **controladores**, **casos de uso**, **repositorios** e **entidades**. Isso facilita a manutencao e a evolucao do sistema, mantendo as regras de negocio isoladas de detalhes de infraestrutura.
+O backend segue uma separação clara de responsabilidades entre **rotas**, **controladores**, **casos de uso**, **repositórios** e **entidades**. Isso facilita a manutenção e a evolução do sistema, mantendo as regras de negócio isoladas de detalhes de infraestrutura.
 
 ```mermaid
 flowchart TD
@@ -69,7 +69,7 @@ flowchart TD
 
 ## → Banco de dados
 
-O banco relacional **PostgreSQL** armazena os dados principais do dominio, incluindo usuarios, papeis, escolas, turmas, feedbacks, perguntas e respostas. O acesso e feito via **TypeORM**, com mapeamento de entidades e relacoes.
+O banco relacional **PostgreSQL** armazena os dados principais do domínio, incluindo usuários, papéis, escolas, turmas, feedbacks, perguntas e respostas. O acesso é feito via **TypeORM**, com mapeamento de entidades e relações.
 
 ## → Execução local
 
