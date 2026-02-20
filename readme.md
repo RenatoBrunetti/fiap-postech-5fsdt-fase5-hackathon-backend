@@ -1,6 +1,14 @@
 # Hackathon Feedback API - Backend
 
+<div style="display:flex;flex-wrap:wrap;gap:16px;">
+	<figure style="margin:0;text-align:center;">
+		<img src="./assets/images/logo.png" width="200" />
+	</figure>
+</div>
+
 O **Hackathon Feedback API** é o serviço de back-end do projeto do hackathon com o tema **"Auxilio aos professores e professoras no ensino publico"**. O objetivo do projeto como um todo é oferecer uma plataforma que facilite o trabalho docente, promovendo eficiencia, criatividade e interação com os estudantes. Nesta fase, o backend fornece a camada de regras de negócio e persistência para o aplicativo de feedbacks de aulas, palestras e materias, atendendo **alunos, professores e escolas**.
+
+`* Renato Carapiá Brunetti / RM362132`
 
 [Repositório GitHub](https://github.com/RenatoBrunetti/fiap-postech-5fsdt-fase5-hackathon-backend)
 
