@@ -8,21 +8,21 @@ O **Hackathon Feedback API** é o serviço de back-end do projeto do hackathon c
 
 <div style="display:flex;flex-wrap:wrap;gap:16px;">
 	<figure style="margin:0;text-align:center;">
-		<img src="./assets/backend-docker.png" width="700" />
+		<img src="./assets/backend-docker.png" width="700" /><br>
 		<figcaption>Conteiner PostgreSQL no Docker</figcaption>
 	</figure>
 </div>
 <br>
 <div style="display:flex;flex-wrap:wrap;gap:16px;">
 	<figure style="margin:0;text-align:center;">
-		<img src="./assets/backend-insomnia.png" width="700" />
+		<img src="./assets/backend-insomnia.png" width="700" /><br>
 		<figcaption>Insomnia</figcaption>
 	</figure>
 </div>
 <br>
 <div style="display:flex;flex-wrap:wrap;gap:16px;">
   <figure style="margin:0;text-align:center;">
-		<img src="./assets/backend-database.png" width="700" />
+		<img src="./assets/backend-database.png" width="700" /><br>
 		<figcaption>Diagrama do Banco de Dados</figcaption>
 	</figure>
 </div>
